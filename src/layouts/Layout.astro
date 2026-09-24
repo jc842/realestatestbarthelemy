@@ -1,0 +1,138 @@
+---
+import { siteConfig } from '../config/site.config';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  lang?: string;
+}
+
+const {
+  title = siteConfig.title,
+  description = siteConfig.description,
+  image = '/images/og-image.jpg',
+  lang = 'fr',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || siteConfig.url);
+const alternateFr = new URL(Astro.url.pathname.replace(/^\/(en|es)/, ''), siteConfig.url);
+const alternateEn = new URL('/en' + Astro.url.pathname.replace(/^\/(en|es)/, ''), siteConfig.url);
+const alternateEs = new URL('/es' + Astro.url.pathname.replace(/^\/(en|es)/, ''), siteConfig.url);
+---
+
+<!DOCTYPE html>
+<html lang={lang} class="scroll-smooth bg-zinc-950 text-zinc-100 antialiased selection:bg-purple-600 selection:text-white">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <link rel="alternate" hreflang="fr" href={alternateFr} />
+    <link rel="alternate" hreflang="en" href={alternateEn} />
+    <link rel="alternate" hreflang="es" href={alternateEs} />
+    <link rel="alternate" hreflang="x-default" href={alternateFr} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={image} />
+
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style is:global>
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      .font-serif {
+        font-family: 'Playfair Display', Georgia, serif;
+      }
+    </style>
+  </head>
+  <body class="flex min-h-screen flex-col bg-zinc-950 text-zinc-200">
+    <!-- Header Aubergine -->
+    <header class="sticky top-0 z-50 border-b border-purple-900/30 bg-zinc-950/90 backdrop-blur-md">
+      <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
+        <a href="/" class="flex items-center gap-3">
+          <div class="flex h-10 w-10 items-center justify-center rounded-sm border border-purple-500/40 bg-purple-950/60 font-serif text-lg font-bold text-amber-300 shadow-lg shadow-purple-950/40">
+            SB
+          </div>
+          <div>
+            <span class="block font-serif text-base font-bold tracking-wider text-zinc-100 uppercase">REAL ESTATE ST-BARTH</span>
+            <span class="block text-[10px] tracking-widest text-amber-300 uppercase">Villas d'Exception & Propriétés</span>
+          </div>
+        </a>
+
+        <!-- Navigation Links -->
+        <nav class="hidden md:flex items-center gap-7 text-xs font-medium text-zinc-300 tracking-wider">
+          <a href="/blog/" class="hover:text-amber-300 transition-colors">VILLAS & DOMAINES</a>
+          <a href="/blog/" class="hover:text-amber-300 transition-colors">FISCALITÉ ART. 74</a>
+          <a href="/blog/" class="hover:text-amber-300 transition-colors">GUSTAVIA & SAINT-JEAN</a>
+          <a href="/mentions-legales/" class="hover:text-amber-300 transition-colors">CONSEIL PRIVÉ</a>
+        </nav>
+
+        <!-- Languages & Badges -->
+        <div class="flex items-center gap-3">
+          <div class="hidden sm:flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-950/40 px-3 py-1 text-[11px] text-purple-200">
+            <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
+            PRESTIGE CARIBÉEN
+          </div>
+          <div class="flex items-center gap-1.5 text-xs text-zinc-400 border-l border-zinc-800 pl-3 font-semibold">
+            <a href="/" class="px-1.5 py-0.5 rounded text-zinc-100 bg-zinc-800">FR</a>
+            <a href="/en/" class="px-1.5 py-0.5 rounded hover:text-zinc-100">EN</a>
+            <a href="/es/" class="px-1.5 py-0.5 rounded hover:text-zinc-100">ES</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- Footer Aubergine -->
+    <footer class="border-t border-purple-950/60 bg-zinc-900/60 py-12 text-zinc-400 text-xs">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div class="md:col-span-2">
+            <div class="flex items-center gap-2 mb-3">
+              <div class="h-7 w-7 rounded-sm border border-purple-500/40 bg-purple-950/60 font-serif text-xs font-bold text-amber-300 flex items-center justify-center">SB</div>
+              <span class="font-serif text-base font-bold text-zinc-100">REAL ESTATE SAINT-BARTHÉLEMY</span>
+            </div>
+            <p class="text-xs text-zinc-400 leading-relaxed max-w-md">
+              Publication de référence sur l'immobilier haut de gamme, les domaines privés et la fiscalité de la Collectivité d'Outre-Mer de Saint-Barthélemy.
+            </p>
+          </div>
+          <div>
+            <h4 class="text-zinc-200 font-semibold mb-3 tracking-wider text-[11px] uppercase">Navigation</h4>
+            <ul class="space-y-2 text-zinc-400">
+              <li><a href="/" class="hover:text-amber-300 transition-colors">Accueil</a></li>
+              <li><a href="/blog/" class="hover:text-amber-300 transition-colors">Dossiers & Études</a></li>
+              <li><a href="/en/" class="hover:text-amber-300 transition-colors">English Edition</a></li>
+              <li><a href="/es/" class="hover:text-amber-300 transition-colors">Edición en Español</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-zinc-200 font-semibold mb-3 tracking-wider text-[11px] uppercase">Légal & Confidentialité</h4>
+            <ul class="space-y-2 text-zinc-400">
+              <li><a href="/mentions-legales/" class="hover:text-amber-300 transition-colors">Mentions Légales</a></li>
+              <li><a href="/politique-confidentialite/" class="hover:text-amber-300 transition-colors">Politique de Confidentialité</a></li>
+              <li><span class="text-zinc-500">100% Cookieless RGPD</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-zinc-800/80 pt-6 flex flex-col sm:flex-row justify-between items-center text-[11px] text-zinc-500">
+          <p>© {new Date().getFullYear()} Real Estate Saint-Barthélemy — Immobilier d'exception & conseil privé.</p>
+          <p class="mt-2 sm:mt-0 font-serif text-amber-300">LEXINGTON AUBERGINE ARCHITECTURE</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
